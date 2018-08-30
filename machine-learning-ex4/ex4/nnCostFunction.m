@@ -117,37 +117,25 @@ for t=1:m,
 	a3 = sigmoid(z3); % final activation layer a3 == h(theta)
 
 	
-	% back propag (god bless me)	
-	
 	z2=[1; z2]; % bias
 
-	delta_3 = a3 - yk(:,t); % y(k) trick - getting columns of t element
+	delta_3 = a3 - yk(:,t);
 	delta_2 = (Theta2' * delta_3) .* sigmoidGradient(z2);
 
 	% skipping sigma2(0) 
 	delta_2 = delta_2(2:end); 
 
 	Theta2_grad = Theta2_grad + delta_3 * a2';
-	Theta1_grad = Theta1_grad + delta_2 * a1; % I don't know why a1 doesn't need to be transpost (brute force try)
+	Theta1_grad = Theta1_grad + delta_2 * a1;
 
 end;
 
-% Theta1_grad = Theta1_grad ./ m;
-% Theta2_grad = Theta2_grad ./ m;
+Theta1_grad(:, 1) = Theta1_grad(:, 1) ./ m;
+Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) ./ m + ((lambda/m) * Theta1(:, 2:end));
 
 
-% Regularization (here you go)
-
-
-	Theta1_grad(:, 1) = Theta1_grad(:, 1) ./ m;
-	
-	Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) ./ m + ((lambda/m) * Theta1(:, 2:end));
-	
-	
-	Theta2_grad(:, 1) = Theta2_grad(:, 1) ./ m;
-	
-	Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) ./ m + ((lambda/m) * Theta2(:, 2:end));
-
+Theta2_grad(:, 1) = Theta2_grad(:, 1) ./ m;
+Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) ./ m + ((lambda/m) * Theta2(:, 2:end));
 
 
 % Unroll gradients
